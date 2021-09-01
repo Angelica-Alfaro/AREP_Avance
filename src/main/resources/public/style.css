@@ -1,0 +1,27 @@
+body {
+    background-color: #ffdd90;
+  }
+.myTitle{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-top: 5%;
+    color: #1311A9;
+}
+.myStockId{
+    margin-top: 3%;
+    width: 20%;
+}
+.form-select{
+    width: 20%;
+}
+.btn-primary{
+    margin-top: 2%;
+    width: 15%;
+}
+.mytext{
+    margin-top: 2%;
+    font-size: large;
+}
+.table-striped{
+    border-color: black;
+    margin-top: 4%;
+}

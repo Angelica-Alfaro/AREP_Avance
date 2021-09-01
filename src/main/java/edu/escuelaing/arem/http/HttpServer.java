@@ -1,6 +1,10 @@
 package edu.escuelaing.arem.http;
 
 import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.io.*;
 
@@ -62,20 +66,31 @@ public class HttpServer {
 	}
 	
 	public String getResource(URI resourceURI) throws IOException {
+		System.out.println("Received URI path: " + resourceURI.getPath());
+		System.out.println("Received URI query: " + resourceURI.getQuery());
 		System.out.println("Received URI: " + resourceURI);
 		//return computeDefaultResponse();
-		return  getRequestDisc();
+		return  getRequestDisc(resourceURI);
 	}
+	
 	//Hacer que el servidor ya reciba js, css, imagenes y no solo html.
-	public String getRequestDisc() throws IOException{
-		//File archivo = new File("src/main/resources/public_html/index.html");
-		File archivo = new File("target/classes/public_html/index.html");//Meterlo en el root del proyecto, relativo al folder del proyecto
-		BufferedReader in = new BufferedReader(new FileReader(archivo));
-		String str;
-		String output = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n\r\n";
-		while ((str = in.readLine()) != null) {
-			System.out.println(str);
-			output+= str+"\n";
+	public String getRequestDisc(URI resourceURI) throws IOException{
+		Path file = Paths.get("target/classes/public" + resourceURI.getPath());
+		String output = null;
+		
+		try (BufferedReader in = Files.newBufferedReader(file, Charset.forName("UTF-8"))) {
+
+			String str, type = null;
+			type = "text/css";
+			output = "HTTP/1.1 200 OK\r\n" + "Content-Type: " + type + "\r\n"; // Define tipo de archivo por ahora solo css
+			
+			while ((str = in.readLine()) != null) {
+				System.out.println(str);
+				output+= str+"\n";
+			}
+
+		} catch (IOException e) {
+			System.err.format("IOException: %s%n", e);
 		}
 		System.out.println(output);
 		return output;
